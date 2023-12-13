@@ -2,21 +2,21 @@ package sqlite3
 
 import "github.com/ebitengine/purego"
 
-type CSqliteCtx struct {
+type CSQLiteCtx struct {
 	ctx uintptr
 }
 
-type CSqlite interface {
-	SqliteInit(path string) *CSqliteCtx
-	SqliteExec(ctx *CSqliteCtx, sql string) string
-	SqliteClose(ctx *CSqliteCtx) int
-	SqliteErrMsg(ctx *CSqliteCtx) string
-	SqliteErrCode(ctx *CSqliteCtx) int
+type CSQLite interface {
+	SQLiteInit(path string) *CSQLiteCtx
+	SQLiteExec(ctx *CSQLiteCtx, sql string) string
+	SQLiteClose(ctx *CSQLiteCtx) int
+	SQLiteErrMsg(ctx *CSQLiteCtx) string
+	SQLiteErrCode(ctx *CSQLiteCtx) int
 	Close() error
 }
 
-type CSqliteImpl struct {
-	libSqlite     uintptr
+type CSQLiteImpl struct {
+	libSQLite     uintptr
 	sqliteInit    func(path string) uintptr
 	sqliteExec    func(db uintptr, sql string) string
 	sqliteClose   func(db uintptr) int
@@ -24,7 +24,7 @@ type CSqliteImpl struct {
 	sqliteErrCode func(db uintptr) int
 }
 
-func NewCSqlite(libraryPath string) (CSqlite, error) {
+func NewCSQLite(libraryPath string) (CSQLite, error) {
 	library, err := openLibrary(libraryPath)
 	if err != nil {
 		return nil, err
@@ -43,8 +43,8 @@ func NewCSqlite(libraryPath string) (CSqlite, error) {
 	purego.RegisterLibFunc(&sqliteErrMsg, library, "sqlite3_abi_errmsg")
 	purego.RegisterLibFunc(&sqliteErrCode, library, "sqlite3_abi_errcode")
 
-	return &CSqliteImpl{
-		libSqlite:     library,
+	return &CSQLiteImpl{
+		libSQLite:     library,
 		sqliteInit:    sqliteInit,
 		sqliteExec:    sqliteExec,
 		sqliteClose:   sqliteClose,
@@ -53,30 +53,30 @@ func NewCSqlite(libraryPath string) (CSqlite, error) {
 	}, nil
 }
 
-func (c *CSqliteImpl) SqliteInit(path string) *CSqliteCtx {
+func (c *CSQLiteImpl) SQLiteInit(path string) *CSQLiteCtx {
 	ctx := c.sqliteInit(path)
 
-	return &CSqliteCtx{
+	return &CSQLiteCtx{
 		ctx,
 	}
 }
 
-func (c *CSqliteImpl) SqliteExec(ctx *CSqliteCtx, sql string) string {
+func (c *CSQLiteImpl) SQLiteExec(ctx *CSQLiteCtx, sql string) string {
 	return c.sqliteExec(ctx.ctx, sql)
 }
 
-func (c *CSqliteImpl) SqliteClose(ctx *CSqliteCtx) int {
+func (c *CSQLiteImpl) SQLiteClose(ctx *CSQLiteCtx) int {
 	return c.sqliteClose(ctx.ctx)
 }
 
-func (c *CSqliteImpl) SqliteErrMsg(ctx *CSqliteCtx) string {
+func (c *CSQLiteImpl) SQLiteErrMsg(ctx *CSQLiteCtx) string {
 	return c.sqliteErrMsg(ctx.ctx)
 }
 
-func (c *CSqliteImpl) SqliteErrCode(ctx *CSqliteCtx) int {
+func (c *CSQLiteImpl) SQLiteErrCode(ctx *CSQLiteCtx) int {
 	return c.sqliteErrCode(ctx.ctx)
 }
 
-func (c *CSqliteImpl) Close() error {
-	return closeLibrary(c.libSqlite)
+func (c *CSQLiteImpl) Close() error {
+	return closeLibrary(c.libSQLite)
 }

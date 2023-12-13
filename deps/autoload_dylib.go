@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-func DumpSqliteLibrary() (string, error) {
+func DumpSQLiteLibrary() (string, error) {
 	file, err := os.CreateTemp("", libName)
 	if err != nil {
 		return "", fmt.Errorf("error creating temp file: %w", err)

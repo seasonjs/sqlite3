@@ -10,7 +10,7 @@ import (
 func getLibrary() string {
 	switch runtime.GOOS {
 	case "darwin":
-		return "./deps/darwin/libsqlite-abi.dylib.dylib"
+		return "./deps/darwin/libsqlite-abi.dylib"
 	case "linux":
 		return "./deps/linux/libsqlite-abi.so"
 	case "windows":
@@ -20,28 +20,28 @@ func getLibrary() string {
 	}
 }
 
-func TestNewCSqlite(t *testing.T) {
-	sqlite, err := NewCSqlite(getLibrary())
+func TestNewCSQLite(t *testing.T) {
+	sqlite, err := NewCSQLite(getLibrary())
 	if err != nil {
 		t.Error(err)
 		return
 	}
 	defer sqlite.Close()
-	ctx := sqlite.SqliteInit("./tmp.db")
+	ctx := sqlite.SQLiteInit("./tmp.db")
 
-	errCode := sqlite.SqliteErrCode(ctx)
+	errCode := sqlite.SQLiteErrCode(ctx)
 	t.Log(errCode)
-	errMsg := sqlite.SqliteErrMsg(ctx)
+	errMsg := sqlite.SQLiteErrMsg(ctx)
 	t.Log(errMsg)
 
-	res := sqlite.SqliteExec(ctx, "CREATE TABLE Users (    id INT PRIMARY KEY,    name VARCHAR(100),    age INT,    email VARCHAR(100),   created_at DATETIME);")
-	errCode = sqlite.SqliteErrCode(ctx)
+	res := sqlite.SQLiteExec(ctx, "CREATE TABLE Users (    id INT PRIMARY KEY,    name VARCHAR(100),    age INT,    email VARCHAR(100),   created_at DATETIME);")
+	errCode = sqlite.SQLiteErrCode(ctx)
 	t.Log(errCode)
-	errMsg = sqlite.SqliteErrMsg(ctx)
+	errMsg = sqlite.SQLiteErrMsg(ctx)
 	t.Log(errMsg)
 	t.Log(res)
 
-	sqlite.SqliteClose(ctx)
+	sqlite.SQLiteClose(ctx)
 
 	err = os.Remove("./tmp.db")
 	if err != nil {

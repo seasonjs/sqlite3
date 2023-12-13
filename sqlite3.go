@@ -6,18 +6,18 @@ import (
 	"os"
 )
 
-type Sqlite3 struct {
-	cSqlite    CSqlite
+type SQLite3 struct {
+	cSQLite    CSQLite
 	isAutoLoad bool
 	dylibPath  string
 }
 
-func NewSqlite3Auto() (*Sqlite3, error) {
-	library, err := deps.DumpSqliteLibrary()
+func NewSQLite3Auto() (*SQLite3, error) {
+	library, err := deps.DumpSQLiteLibrary()
 	if err != nil {
 		return nil, err
 	}
-	sqlite, err := NewSqlite3(library)
+	sqlite, err := NewSQLite3(library)
 	if err != nil {
 		return nil, err
 	}
@@ -26,31 +26,31 @@ func NewSqlite3Auto() (*Sqlite3, error) {
 	return sqlite, nil
 }
 
-func NewSqlite3(dylibPath string) (*Sqlite3, error) {
-	cSqlite, err := NewCSqlite(dylibPath)
+func NewSQLite3(dylibPath string) (*SQLite3, error) {
+	cSQLite, err := NewCSQLite(dylibPath)
 	if err != nil {
 		return nil, err
 	}
-	return &Sqlite3{
-		cSqlite: cSqlite,
+	return &SQLite3{
+		cSQLite: cSQLite,
 	}, nil
 }
 
 type Connect struct {
-	ctx     *CSqliteCtx
-	sqlite3 *Sqlite3
+	ctx     *CSQLiteCtx
+	sqlite3 *SQLite3
 }
 
-func (s *Sqlite3) Open(path string) (*Connect, error) {
-	ctx := s.cSqlite.SqliteInit(path)
-	if s.cSqlite.SqliteErrCode(ctx) != 0 {
-		return nil, errors.New(s.cSqlite.SqliteErrMsg(ctx))
+func (s *SQLite3) Open(path string) (*Connect, error) {
+	ctx := s.cSQLite.SQLiteInit(path)
+	if s.cSQLite.SQLiteErrCode(ctx) != 0 {
+		return nil, errors.New(s.cSQLite.SQLiteErrMsg(ctx))
 	}
 	return &Connect{ctx: ctx, sqlite3: s}, nil
 }
 
-func (s *Sqlite3) Close() error {
-	err := s.cSqlite.Close()
+func (s *SQLite3) Close() error {
+	err := s.cSQLite.Close()
 	if err != nil {
 		return err
 	}
@@ -67,9 +67,9 @@ func (c *Connect) Exec(sql string) (string, error) {
 	if err := checkConnect(c.ctx); err != nil {
 		return "", err
 	}
-	res := c.sqlite3.cSqlite.SqliteExec(c.ctx, sql)
-	if c.sqlite3.cSqlite.SqliteErrCode(c.ctx) != 0 {
-		return "", errors.New(c.sqlite3.cSqlite.SqliteErrMsg(c.ctx))
+	res := c.sqlite3.cSQLite.SQLiteExec(c.ctx, sql)
+	if c.sqlite3.cSQLite.SQLiteErrCode(c.ctx) != 0 {
+		return "", errors.New(c.sqlite3.cSQLite.SQLiteErrMsg(c.ctx))
 	}
 	return res, nil
 }
@@ -78,14 +78,14 @@ func (c *Connect) Close() error {
 	if err := checkConnect(c.ctx); err != nil {
 		return err
 	}
-	res := c.sqlite3.cSqlite.SqliteClose(c.ctx)
+	res := c.sqlite3.cSQLite.SQLiteClose(c.ctx)
 	if res != 0 {
-		return errors.New(c.sqlite3.cSqlite.SqliteErrMsg(c.ctx))
+		return errors.New(c.sqlite3.cSQLite.SQLiteErrMsg(c.ctx))
 	}
 	return nil
 }
 
-func checkConnect(ctx *CSqliteCtx) error {
+func checkConnect(ctx *CSQLiteCtx) error {
 	if ctx.ctx == 0 {
 		return errors.New("connect ctx is nil, you must call Open to start a connect")
 	}

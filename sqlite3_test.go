@@ -6,13 +6,13 @@ import (
 	"testing"
 )
 
-func TestNewSqlite3Auto(t *testing.T) {
-	sqlite, err := sqlite3.NewSqlite3Auto()
+func TestNewSQLite3Auto(t *testing.T) {
+	sqlite, err := sqlite3.NewSQLite3Auto()
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	defer func(sqlite *sqlite3.Sqlite3) {
+	defer func(sqlite *sqlite3.SQLite3) {
 		err := sqlite.Close()
 		if err != nil {
 			t.Error(err)

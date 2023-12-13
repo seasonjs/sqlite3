@@ -7,7 +7,7 @@ import _ "embed"
 //go:embed linux/libsqlite-abi.so
 var libSqlite []byte
 
-var libName = "sqlite-*.so"
+var libName = "libsqlite-*.so"
 
 func getDylib() []byte {
 	return libSqlite
