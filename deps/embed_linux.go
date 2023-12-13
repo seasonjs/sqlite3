@@ -4,7 +4,7 @@ package deps
 
 import _ "embed"
 
-//go:embed linux/sqlite-abi.so
+//go:embed linux/libsqlite-abi.so
 var libSqlite []byte
 
 var libName = "sqlite-*.so"
