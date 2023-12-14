@@ -25,7 +25,15 @@ func TestNewSQLite3Auto(t *testing.T) {
 		return
 	}
 
-	exec, err := conn.Exec("CREATE TABLE Users (    id INT PRIMARY KEY,    name VARCHAR(100),    age INT,    email VARCHAR(100),   created_at DATETIME);")
+	exec, err := conn.Exec(`
+				CREATE TABLE Users (    
+					id INT PRIMARY KEY,    
+					name VARCHAR(100),    
+					age INT,    
+					email VARCHAR(100),   
+					created_at DATETIME
+                );
+	`)
 	if err != nil {
 		t.Error(err)
 		return

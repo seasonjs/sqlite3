@@ -34,7 +34,15 @@ func TestNewCSQLite(t *testing.T) {
 	errMsg := sqlite.SQLiteErrMsg(ctx)
 	t.Log(errMsg)
 
-	res := sqlite.SQLiteExec(ctx, "CREATE TABLE Users (    id INT PRIMARY KEY,    name VARCHAR(100),    age INT,    email VARCHAR(100),   created_at DATETIME);")
+	res := sqlite.SQLiteExec(ctx, `
+				CREATE TABLE Users (    
+					id INT PRIMARY KEY,    
+					name VARCHAR(100),    
+					age INT,    
+					email VARCHAR(100),   
+					created_at DATETIME
+                );
+	`)
 	errCode = sqlite.SQLiteErrCode(ctx)
 	t.Log(errCode)
 	errMsg = sqlite.SQLiteErrMsg(ctx)
